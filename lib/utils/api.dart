@@ -72,22 +72,47 @@ class APIs {
       Timestamp timestamp = Timestamp.fromDate(dateTime);
       RemainderModel remainderModel =
           RemainderModel(time: timestamp, onOff: false);
-      if(time != TimeOfDay.now()){
+      if (time != TimeOfDay.now()) {
         return await fireStore
-          .collection('users')
-          .doc(uid)
-          .collection('remainder')
-          .doc()
-          .set(remainderModel.toJson())
-          .then((value) {
-        Fluttertoast.showToast(msg: 'Remainder added');
-      });
-      }else{
+            .collection('users')
+            .doc(uid)
+            .collection('remainder')
+            .doc()
+            .set(remainderModel.toJson())
+            .then((value) {
+          Fluttertoast.showToast(msg: 'Remainder added');
+        });
+      } else {
         Fluttertoast.showToast(msg: 'Please check your selected time');
       }
-      
     } catch (e) {
       Fluttertoast.showToast(msg: e.toString());
     }
+  }
+
+  static Future<void> deleteRemainder(String uid, String id) async {
+    try {
+      await fireStore
+          .collection('users')
+          .doc(uid)
+          .collection('remainder')
+          .doc(id)
+          .delete();
+      Fluttertoast.showToast(msg: 'Successfully deleted');
+    } catch (e) {
+      Fluttertoast.showToast(msg: e.toString());
+    }
+  }
+
+  static Future<void> updateRemainder(
+      String uid, String id, RemainderModel model) async {
+    await fireStore
+        .collection('users')
+        .doc(uid)
+        .collection('remainder')
+        .doc(id)
+        .update({"onOff": model.onOff, "time": model.time}).then(
+            (value) => Fluttertoast.showToast(msg: "Successfully updated!"),
+            onError: (e) => Fluttertoast.showToast(msg: e.toString()));
   }
 }
