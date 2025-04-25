@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -13,6 +15,8 @@ class APIs {
 
   static CollectionReference users =
       FirebaseFirestore.instance.collection('users');
+
+  static User? currentUser = auth.currentUser;
 
   static Future<void> register(
       BuildContext context, String email, String password, String name) async {
@@ -68,11 +72,12 @@ class APIs {
   static Future<void> addRemainder(String uid, TimeOfDay time) async {
     try {
       DateTime d = DateTime.now();
-      DateTime dateTime = DateTime(d.year, d.month, time.hour, time.minute);
+      DateTime dateTime = DateTime(d.year, d.month, d.day, time.hour, time.minute);
       Timestamp timestamp = Timestamp.fromDate(dateTime);
       RemainderModel remainderModel =
           RemainderModel(time: timestamp, onOff: false);
       if (time != TimeOfDay.now()) {
+      
         return await fireStore
             .collection('users')
             .doc(uid)
@@ -114,5 +119,13 @@ class APIs {
         .update({"onOff": model.onOff, "time": model.time}).then(
             (value) => Fluttertoast.showToast(msg: "Successfully updated!"),
             onError: (e) => Fluttertoast.showToast(msg: e.toString()));
+  }
+
+  static Stream<QuerySnapshot<Map<String, dynamic>>> getAllRemainder() {
+    return fireStore
+        .collection('users')
+        .doc(currentUser!.uid)
+        .collection('remainder')
+        .snapshots();
   }
 }

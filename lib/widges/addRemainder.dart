@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:remainder/utils/api.dart';
@@ -67,7 +69,7 @@ addRemainder(BuildContext context, String uid) {
                     child: Text('Cancel')),
                 TextButton(
                     onPressed: () {
-                      // APIs.addRemainder(uid, _selectedTime);
+                      APIs.addRemainder(uid, _selectedTime);
                       Navigator.of(context).pop();
                     },
                     child: Text("Add"))

@@ -22,11 +22,11 @@ class RemainderModel {
 
   factory RemainderModel.fromJson(Map<String, dynamic> json) => RemainderModel(
         time: json["time"],
-        onOff: json["onFF"],
+        onOff: json["onOff"],
       );
 
   Map<String, dynamic> toJson() => {
         "time": time,
-        "onFF": onOff,
+        "onOff": onOff,
       };
 }
